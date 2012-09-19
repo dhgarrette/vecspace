@@ -6,11 +6,10 @@ name := "vecspace"
 
 version := "0.0.1"
 
-organization := "dhgarrette"
-
 scalaVersion := "2.9.2"
 
 resolvers ++= Seq(
+  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   "Cloudera Hadoop Releases" at "https://repository.cloudera.com/content/repositories/releases/",
   "Thrift location" at "http://people.apache.org/~rawson/repo/"
 )
