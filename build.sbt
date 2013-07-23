@@ -6,20 +6,20 @@ name := "vecspace"
 
 version := "0.0.1"
 
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.2"
 
 resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   "Cloudera Hadoop Releases" at "https://repository.cloudera.com/content/repositories/releases/",
-  "Thrift location" at "http://people.apache.org/~rawson/repo/"
+  "Thrift location" at "http://people.apache.org/~rawson/repo/",
+  "dhg releases repo" at "http://www.cs.utexas.edu/~dhg/maven-repository/releases",
+  "dhg snapshot repo" at "http://www.cs.utexas.edu/~dhg/maven-repository/snapshots"
 )
 
 libraryDependencies ++= Seq(
-  "commons-logging" % "commons-logging" % "1.1.1",
-  "log4j" % "log4j" % "1.2.16",
-  "org.scalatest" %% "scalatest" % "1.6.1" % "test",
+  "dhg" % "scala-util_2.10" % "1.0.0-SNAPSHOT" changing(),
   "junit" % "junit" % "4.10" % "test",
-  "com.novocode" % "junit-interface" % "0.6" % "test->default") //switch to ScalaTest at some point...
+  "com.novocode" % "junit-interface" % "0.8" % "test->default") //switch to ScalaTest at some point...
 
 // Scrunch Dependencies (in addition to Scrunch and Crunch jars in lib/)
 libraryDependencies ++= Seq(
