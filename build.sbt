@@ -1,6 +1,6 @@
 import AssemblyKeys._
 
-import com.typesafe.startscript.StartScriptPlugin
+import com.typesafe.sbt.SbtStartScript
 
 name := "vecspace"
 
@@ -49,5 +49,7 @@ jarName in assembly := "vecpsace-assembly.jar"
 
 test in assembly := {}
 
-seq(StartScriptPlugin.startScriptForClassesSettings: _*)
+seq(SbtStartScript.startScriptForClassesSettings: _*)
+
+SbtStartScript.stage in Compile := Unit
 

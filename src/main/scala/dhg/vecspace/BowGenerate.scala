@@ -7,16 +7,16 @@ import com.cloudera.scrunch.PTable
 import org.apache.commons.logging.LogFactory
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
-import opennlp.scalabha.util.CollectionUtils._
-import opennlp.scalabha.util.Pattern
-import opennlp.scalabha.util.Pattern.{ -> }
-import opennlp.scalabha.util.LogNum
+import dhg.util.CollectionUtil._
+import dhg.util.Pattern
+import dhg.util.Pattern.{ -> }
+import dhg.util.math.LogDouble
 
 /**
  * HOW TO RUN:
  * sbt assembly
  * hadoop fs -put /scratch/01899/dhg1/nytgiga.lem nytgiga.lem
- * hadoop jar target/scalabha-assembly.jar opennlp.scalabha.vecspace.BowGenerate nytgiga.lem
+ * hadoop jar target/scalabha-assembly.jar dhg.vecspace.BowGenerate nytgiga.lem
  * hadoop fs -getmerge nytgiga.lem.vc.f2000.m50.wInf.txt /scratch/01899/dhg1/nytgiga.lem.vc.f2000.m50.wInf.txt
  */
 object BowGenerate {
@@ -162,7 +162,7 @@ object BowGenerate {
     val featureProbGivenWord =
       featureCountsByWordWithWordCountFeature
         .mapValues { featureCounts =>
-          val wordCount = LogNum(featureCounts(WordCountFeature))
+          val wordCount = LogDouble(featureCounts(WordCountFeature))
           featureCounts
             .filterKeys(_ != WordCountFeature) // remove dummy feature
             .mapVals(c => (LogNum(c) / wordCount).logValue)
@@ -232,7 +232,7 @@ object BowGenerate {
      */
     val pmi =
       featureProbGivenWord
-        .mapValues(_.map { case (feature, prob) => (feature, (new LogNum(prob) / new LogNum(featureProb(feature))).logValue / Log2) })
+        .mapValues(_.map { case (feature, prob) => (feature, (new LogDouble(prob) / new LogNum(featureProb(feature))).logValue / Log2) })
 
     pmi
   }
