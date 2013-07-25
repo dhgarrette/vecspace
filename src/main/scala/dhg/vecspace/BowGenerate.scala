@@ -10,6 +10,7 @@ import org.apache.log4j.Logger
 import dhg.util.CollectionUtil._
 import dhg.util.Pattern
 import dhg.util.Pattern.{ -> }
+import dhg.util.StringUtil._
 import dhg.util.math.LogDouble
 
 /**
@@ -22,8 +23,9 @@ import dhg.util.math.LogDouble
 object BowGenerate {
   val LOG = LogFactory.getLog(BowGenerate.getClass)
 
-  val punctuation = (w: String) => Set(".", ",", "``", "''", "'", "`", "--", ":", ";", "-RRB-", "-LRB-", "?", "!", "-RCB-", "-LCB-", "...", "-", "_")(w.toUpperCase)
-  val stopwords = (w: String) => punctuation(w) || Stopwords.get(w) //TODO: remove stopwords?
+  val HasLetter = ".*[A-Za-z].*".r
+  val Punctuation = (w: String) => Set(".", ",", "``", "''", "'", "`", "--", ":", ";", "-RRB-", "-LRB-", "?", "!", "-RCB-", "-LCB-", "...", "-", "_")(w.toUpperCase)
+  val ValidToken = (w: String) => !Stopwords(w.toLowerCase) && HasLetter.matches(w) && !punctuation(w)
 
   val Log2 = math.log(2)
 
@@ -91,7 +93,7 @@ object BowGenerate {
       inputLines
         .flatMap(_
           .split("\\s+").toList // split into individual tokens
-          .filterNot(stopwords) // remove useless tokens 
+          .filter(ValidToken) // remove useless tokens 
           .counts // map words to the number of times they appear in this sentence
           .map {
             // map word to its count in the sentence AND a count of 1 document 

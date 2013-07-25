@@ -6,7 +6,7 @@ import scala.Array.canBuildFrom
  *  From: ftp://ftp.cs.cornell.edu/pub/smart/english.stop
  */
 object Stopwords {
-  lazy val get = """
+  val words = """
 			a
 			a's
 			able
@@ -584,6 +584,6 @@ object Stopwords {
     .filter(_.nonEmpty)
     .toSet
 
-  def apply(word: String) = get(word)
+  def apply(word: String) = words(word)
 
 } 
