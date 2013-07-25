@@ -1,34 +1,27 @@
 import AssemblyKeys._
 
-import com.typesafe.sbt.SbtStartScript
+assemblySettings
+
+seq(com.github.retronym.SbtOneJar.oneJarSettings: _*)
 
 name := "vecspace"
 
-version := "0.0.1"
+version := "0.0.2"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.9.2"
 
 resolvers ++= Seq(
-  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-  "Cloudera Hadoop Releases" at "https://repository.cloudera.com/content/repositories/releases",
-  "dhg releases repo" at "http://www.cs.utexas.edu/~dhg/maven-repository/releases",
-  "dhg snapshot repo" at "http://www.cs.utexas.edu/~dhg/maven-repository/snapshots"
+  "Sonatype-snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
+  "cloudera" at "https://repository.cloudera.com/content/repositories/releases",
+  "conjars" at "http://conjars.org/repo"
 )
 
-libraryDependencies ++= Seq(
-  "dhg" % "scala-util_2.10" % "1.0.0-SNAPSHOT" changing(),
-  "dhg" % "nlp_2.10" % "1.0.0-SNAPSHOT" changing(),
-  "com.nicta" %% "scoobi" % "0.7.2",
-  "junit" % "junit" % "4.10" % "test",
-  "com.novocode" % "junit-interface" % "0.8" % "test->default") //switch to ScalaTest at some point...
+scalacOptions ++= Seq("-deprecation", "-Ydependent-method-types", "-optimize", "-unchecked")
 
-seq(assemblySettings: _*)
+jarName in assembly := "tacc-hadoop-assembly.jar"
 
-jarName in assembly := "vecpsace-assembly.jar"
+mainClass in assembly := None
 
 test in assembly := {}
 
-seq(SbtStartScript.startScriptForClassesSettings: _*)
-
-SbtStartScript.stage in Compile := Unit
-
+mainClass in oneJar := None
