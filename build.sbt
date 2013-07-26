@@ -16,6 +16,9 @@ resolvers ++= Seq(
   "conjars" at "http://conjars.org/repo"
 )
 
+libraryDependencies ++= Seq(
+  "edu.stanford.nlp" % "stanford-corenlp" % "3.2.0")
+
 scalacOptions ++= Seq("-deprecation", "-Ydependent-method-types", "-optimize", "-unchecked")
 
 jarName in assembly := "tacc-hadoop-assembly.jar"
