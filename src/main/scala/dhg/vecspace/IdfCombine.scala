@@ -4,6 +4,10 @@ import dhg.util.CollectionUtil._
 import dhg.util.FileUtil._
 import com.twitter.scalding._
 import com.utcompling.tacc.scalding.ScaldingJob
+import dhg.nlp.data.Giga2TokLemPos.CleanTok
+import dhg.nlp.data.Giga2TokLemPos.CleanPos
+import dhg.vecspace.Idf.ValidLemma
+import dhg.vecspace.Idf.InvalidPos
 
 object IdfCombine extends ScaldingJob {
   def jobClass = classOf[IdfCombineClass]
@@ -18,9 +22,11 @@ class IdfCombineClass(args: Args) extends Job(args) {
 
   TypedPipe.from(TextLine(inputIdfFile))
     .map { countLine =>
-      val Vector(l, p, c) = countLine.split("\t").toVector
-      ("%s\t%s".format(l, p), c.toInt)
+      val Vector(CleanTok(l), CleanPos(p), c) = countLine.split("\t").toVector
+      (l, p, c.toInt)
     }
+    .filter { case (l, p, c) => ValidLemma(l) && !InvalidPos(p) }
+    .map { case (l, p, c) => ("%s\t%s".format(l, p), c) }
     .group
     .reduce(_ + _)
     .filter { case (lp, c) => c >= minCount }

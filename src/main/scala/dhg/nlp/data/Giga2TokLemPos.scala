@@ -67,8 +67,15 @@ object Giga2TokLemPos {
   object CleanTok {
     def unapply(t: String): Option[String] = Some(t match {
       case "|" => "-VERTBAR-"
-      case _ => t
+      case _ => t.replace("\\/", "/")
     })
   }
 
+  object CleanPos {
+    def unapply(p: String): Option[String] = Some(p match {
+      case _ if p.startsWith("-") => p
+      case _ if p.startsWith("NNP") => "NNP"
+      case _ => p.take(2)
+    })
+  }
 }

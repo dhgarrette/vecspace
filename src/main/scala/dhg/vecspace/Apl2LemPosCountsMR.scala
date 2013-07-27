@@ -7,6 +7,7 @@ import dhg.util.CollectionUtil._
 import dhg.util.FileUtil._
 import dhg.nlp.data.AnnotatedData.AnnotatedToken
 import dhg.nlp.data.Giga2TokLemPos.CleanTok
+import dhg.nlp.data.Giga2TokLemPos.CleanPos
 
 object Apl2LemPosCountsMR extends ScaldingJob {
   def jobClass = classOf[Apl2LemPosCountsMRClass]
@@ -26,10 +27,11 @@ class Apl2LemPosCountsMRClass(args: Args) extends Job(args) {
     .flatMap { articleLine =>
       val Vector(id, typ, paragraphs @ _*) = articleLine.split("\t").toVector
       paragraphs.toVector.par
-        .flatMap(paragraph => Giga2TokLemPos.annotator.apply(paragraph)
-          .flatMap(_.collect {
-            case AnnotatedToken(CleanTok(w), CleanTok(l), p, _) if Idf.ValidLemma(l) && !Idf.InvalidPos(p) => ("%s\t%s".format(l, p), 1)
-          })).seq
+        .flatMap(paragraph =>
+          Giga2TokLemPos.annotator.apply(paragraph)
+            .flatMap(_.collect {
+              case AnnotatedToken(w, CleanTok(l), CleanPos(p), _) if Idf.ValidLemma(l) && !Idf.InvalidPos(p) => ("%s\t%s".format(l, p), 1)
+            })).seq
     }
     .group
     .reduce(_ + _)
