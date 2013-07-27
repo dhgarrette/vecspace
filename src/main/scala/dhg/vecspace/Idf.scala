@@ -4,17 +4,19 @@ import dhg.util.CollectionUtil._
 import dhg.util.FileUtil._
 import com.twitter.scalding._
 import com.utcompling.tacc.scalding.ScaldingJob
+import dhg.vecspace.Idf.ValidLemma
+import dhg.vecspace.Idf.InvalidPos
 
 object Idf extends ScaldingJob {
   def jobClass = classOf[IdfClass]
-}
 
-class IdfClass(args: Args) extends Job(args) {
   val HasLetter = ".*[A-Za-z].*".r
   val Punctuation = (w: String) => Set(".", ",", "``", "''", "'", "`", "--", ":", ";", "(", ")", "[", "]", "{", "}", "-RRB-", "-LRB-", "?", "!", "-RCB-", "-LCB-", "...", "-", "_", "-VERTBAR-")(w.toUpperCase)
   val ValidLemma = (w: String) => !Stopwords(w.toLowerCase) && HasLetter.pattern.matcher(w).matches && !Punctuation(w)
   val InvalidPos = Set("CC", "CD", "DT", "EX", "IN", "LS", "MD", "PDT", "POS", "PRP", "PRP$", "RP", "SYM", "TO", "UH", "WDT", "WP", "WP$", "WRB")
+}
 
+class IdfClass(args: Args) extends Job(args) {
   val (inputTlpFile, minCount, outputIdfFile) =
     args.positional match {
       case Seq(inputTlpFile, minCount, outputIdfFile) => (inputTlpFile, minCount.toInt, outputIdfFile)
