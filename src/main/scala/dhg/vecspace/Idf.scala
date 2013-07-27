@@ -15,9 +15,10 @@ class IdfClass(args: Args) extends Job(args) {
   val ValidLemma = (w: String) => !Stopwords(w.toLowerCase) && HasLetter.pattern.matcher(w).matches && !Punctuation(w)
   val InvalidPos = Set("CC", "CD", "DT", "EX", "IN", "LS", "MD", "PDT", "POS", "PRP", "PRP$", "RP", "SYM", "TO", "UH", "WDT", "WP", "WP$", "WRB")
 
-  val (inputTlpFile, outputIdfFile, minCount) =
+  val (inputTlpFile, minCount, outputIdfFile) =
     args.positional match {
-      case Seq(inputTlpFile, outputIdfFile, minCount) => (inputTlpFile, outputIdfFile, minCount.toInt)
+      case Seq(inputTlpFile, minCount, outputIdfFile) => (inputTlpFile, minCount.toInt, outputIdfFile)
+      case Seq(inputTlpFile, outputIdfFile) => (inputTlpFile, 1, outputIdfFile)
     }
 
   TypedPipe.from(TextLine(inputTlpFile))
