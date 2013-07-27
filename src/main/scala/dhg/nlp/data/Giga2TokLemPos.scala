@@ -33,9 +33,9 @@ object Giga2TokLemPos {
 
     val sb = new StringBuilder
     sb ++= id.replaceAll("\\s+", "")
-    sb ++= " "
+    sb ++= "\t"
     sb ++= typ.replaceAll("\\s+", "")
-    sb ++= " "
+    sb ++= "\t"
     sb ++= sentenceStrings.mkString("\t")
     sb.result
   }
