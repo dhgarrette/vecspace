@@ -9,12 +9,12 @@ import dhg.nlp.data.AnnotatedData.AnnotatedToken
 import dhg.nlp.data.Giga2TokLemPos.CleanTok
 import dhg.nlp.data.Giga2TokLemPos.CleanPos
 
-object Apl2LemPosCountsMR extends ScaldingJob {
-  def jobClass = classOf[Apl2LemPosCountsMRClass]
+object Apl2LemPosDocFreqMR extends ScaldingJob {
+  def jobClass = classOf[Apl2LemPosDocFreqMRClass]
 
 }
 
-class Apl2LemPosCountsMRClass(args: Args) extends Job(args) {
+class Apl2LemPosDocFreqMRClass(args: Args) extends Job(args) {
   val (inputAplFile, outputTlpFile) =
     args.positional match {
       case Seq(inputAplFile, outputFile) => (inputAplFile, outputFile)
@@ -26,8 +26,8 @@ class Apl2LemPosCountsMRClass(args: Args) extends Job(args) {
     .filter(_.nonEmpty)
     .flatMap { articleLine =>
       val Vector(id, typ, paragraphs @ _*) = articleLine.split("\t").toVector
-      paragraphs.toVector.par
-        .flatMap(paragraph =>
+      paragraphs.toSet.par // Using a SET here means at most one count per article
+        .flatMap((paragraph: String) =>
           Giga2TokLemPos.annotator.apply(paragraph)
             .flatMap(_.collect {
               case AnnotatedToken(w, CleanTok(l), CleanPos(p), _) if Idf.ValidLemma(l) && !Idf.InvalidPos(p) => ("%s\t%s".format(l, p), 1)
