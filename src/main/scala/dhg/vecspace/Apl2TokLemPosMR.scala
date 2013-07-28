@@ -1,4 +1,4 @@
-package dhg.nlp.data
+package dhg.vecspace
 
 import com.utcompling.tacc.scalding.ScaldingJob
 import com.twitter.scalding._
